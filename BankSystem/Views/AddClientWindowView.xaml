@@ -1,0 +1,35 @@
+﻿<Window x:Class="BankSystem.Views.AddClientWindowView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BankSystem.Views"
+        xmlns:vm="clr-namespace:BankSystem.ViewModels"
+        xmlns:wpftk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        Title="AddClientWindowView"
+        Height="360" Width="300"
+        MinHeight="360" MinWidth="300"
+        MaxHeight="360" MaxWidth="300">
+    <Window.DataContext>
+        <vm:AddClientViewModel/>
+    </Window.DataContext>
+    
+    <Grid>
+        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Label Content="First Name"/>
+            <TextBox x:Name="FirstName_tb" Text="{Binding FirstName}"/>
+            <Label Content="SecondName"/>
+            <TextBox x:Name="SecondName_tb" Text="{Binding SecondName}"/>
+            <CheckBox Content="IsVip" Margin="5,10,5,5" IsChecked="{Binding IsVip}"/>
+            <Label Content="Account"/>
+            <wpftk:MaskedTextBox x:Name="Account_tb" Mask="0000 0000 0000 0000" Text="{Binding Account}"/>
+            <Label Content="Amount"/>
+            <TextBox x:Name="Amount_tb" Text="{Binding Amount}"/>
+            <Label Content="CreditHistory"/>
+            <ComboBox ItemsSource="{Binding CreditHistories}" SelectedItem="{Binding SelectedItem}"/>
+            <Button Content="Add" Margin="5,10,5,5" Command="{Binding Add}"/>
+            <Button Content="Cancel" Margin="5,10,5,5" Command="{Binding Close}"/>
+        </StackPanel>
+    </Grid>
+</Window>

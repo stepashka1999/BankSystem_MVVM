@@ -1,0 +1,30 @@
+﻿<Window x:Class="BankSystem.Views.AddOrganisationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BankSystem.Views"
+        xmlns:wpftk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:vm ="clr-namespace:BankSystem.ViewModels"
+        mc:Ignorable="d"
+        Title="AddOrganisationWindow"
+        Height="300" Width="300"
+        MinHeight="300" MinWidth="300"
+        MaxHeight="300" MaxWidth="300">
+    
+
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Label Content="Name"/>
+            <TextBox x:Name="Name_tb" Text="{Binding NameOrg}"/>
+            <Label Content="Account"/>
+            <wpftk:MaskedTextBox x:Name="Account_tb" Mask="0000 0000 0000 0000" Text="{Binding Account}"/>
+            <Label Content="Amount"/>
+            <TextBox x:Name="Amount_tb" Text="{Binding Amount}"/>
+            <Label Content="CreditHistory"/>
+            <ComboBox ItemsSource="{Binding CreditHistories}" SelectedItem="{Binding SelectedItem}"/>
+            <Button Content="Add" Margin="5,10,5,5" Command="{Binding Add}"/>
+            <Button Content="Cancel" Margin="5,10,5,5" Command="{Binding Close}"/>
+        </StackPanel>
+    </Grid>
+</Window>

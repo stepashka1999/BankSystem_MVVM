@@ -1,0 +1,22 @@
+﻿<Window x:Class="BankSystem.Views.FirstLoadView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BankSystem.Views"
+        mc:Ignorable="d"
+        Title="FirstLoadView" 
+        MinHeight="150" MinWidth="250"
+        Height="150" Width="250"
+        MaxHeight="150" MaxWidth="250">
+    
+    
+    <Grid>
+        <StackPanel>
+            <Label Content="Loacal Server Name:"/>
+            <TextBox Margin="5,0,5,10" Text="{Binding ServerName}"/>
+            <Button Content="Connect" Margin="5" Command="{Binding ConnectCommand}"/>
+            <Button Content="Close" Margin="5" Command="{Binding CancelCommand}"/>
+        </StackPanel>
+    </Grid>
+</Window>
