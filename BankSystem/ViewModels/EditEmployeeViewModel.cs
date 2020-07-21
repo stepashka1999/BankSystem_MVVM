@@ -79,9 +79,6 @@ namespace BankSystem.ViewModels
             context = new BankDbContext();
             this.employee = employee;
 
-            context.Departaments.Load();
-            Departaments = context.Departaments.Local.ToBindingList();
-
             FillFields();
         }
 
@@ -94,7 +91,6 @@ namespace BankSystem.ViewModels
         /// </summary>
         private void FillFields()
         {
-            SelectedItem = employee.Departament;
             FirstName = employee.FirstName;
             SecondName = employee.SecondName;
             Phone = employee.Phone.ToString();
@@ -118,12 +114,6 @@ namespace BankSystem.ViewModels
             if (res.Length != 11)
             {
                 Error = "Номер телефона введен неверно";
-                return false;
-            }
-
-            if (SelectedItem == null)
-            {
-                Error = $"Департамент не выбран";
                 return false;
             }
 
@@ -155,7 +145,6 @@ namespace BankSystem.ViewModels
             employee.FirstName = FirstName;
             employee.SecondName = SecondName;
             employee.Phone = PhoneParse(Phone);
-            employee.Departament = SelectedItem;
 
             context.SaveChanges();
             context.Dispose();
