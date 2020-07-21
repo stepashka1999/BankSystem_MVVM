@@ -21,10 +21,10 @@ namespace BankSystem.Views
     /// </summary>
     public partial class TransactWindowView : Window
     {
-        public TransactWindowView(BankDbContext context, AClient selectedItem)
+        public TransactWindowView(AClient selectedItem)
         {
             InitializeComponent();
-            DataContext = new TransactViewModel(context, selectedItem, this);
+            DataContext = new TransactViewModel(selectedItem);
         }
     }
 }

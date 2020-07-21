@@ -23,7 +23,6 @@ namespace BankSystem.Views
         public FirstLoadView()
         {
             InitializeComponent();
-            DataContext = new FirstConnectionViewModel(this);
         }
     }
 }

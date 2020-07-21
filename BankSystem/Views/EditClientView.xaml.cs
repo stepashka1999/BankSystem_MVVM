@@ -17,14 +17,14 @@ using System.Windows.Shapes;
 namespace BankSystem.Views
 {
     /// <summary>
-    /// Логика взаимодействия для AddOrganisationWindow.xaml
+    /// Логика взаимодействия для EditClientView.xaml
     /// </summary>
-    partial class AddOrganisationWindow : Window
+    public partial class EditClientView : Window
     {
-        public AddOrganisationWindow()
+        public EditClientView(ClientModel client)
         {
             InitializeComponent();
+            DataContext = new EditClientViewModel(client);
         }
-
     }
 }

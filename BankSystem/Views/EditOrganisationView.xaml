@@ -1,22 +1,16 @@
-﻿<Window x:Class="BankSystem.Views.AddOrganisationWindow"
+﻿<Window x:Class="BankSystem.Views.EditOrganisationView"
         x:Name="currentWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BankSystem.Views"
-        xmlns:wpftk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        xmlns:vm ="clr-namespace:BankSystem.ViewModels"
+        xmlns:wpftk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:BankSystem.Views"
         mc:Ignorable="d"
-        Title="AddOrganisationWindow"
-        Height="320" Width="300"
-        MinHeight="300" MinWidth="300">
-
-    <Window.DataContext>
-        <vm:AddOrgViewModel/>
-    </Window.DataContext>
-    
+        Title="EditOrganisationView"
+        MinHeight="340" MinWidth="300"
+        Height="340" Width="300">
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <i:Interaction.Triggers>
@@ -24,7 +18,7 @@
                 <i:InvokeCommandAction Command="{Binding VerifyCommand}"/>
             </i:EventTrigger>
         </i:Interaction.Triggers>
-        
+
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Label Content="{Binding Error}" Foreground="OrangeRed" Margin="5,0"/>
             <Label Content="Name"/>
@@ -35,7 +29,7 @@
             <TextBox x:Name="Amount_tb" Text="{Binding Amount}" Margin="5,0"/>
             <Label Content="CreditHistory"/>
             <ComboBox ItemsSource="{Binding CreditHistories}" Margin="5,0" SelectedItem="{Binding SelectedItem}"/>
-            <Button Content="Add" Margin="5,10,5,5" Command="{Binding Add}" CommandParameter="{Binding ElementName=currentWindow}"/>
+            <Button Content="Edit" Margin="5,10,5,5" Command="{Binding Add}" CommandParameter="{Binding ElementName=currentWindow}"/>
             <Button Content="Cancel" Margin="5,10,5,5" Command="{Binding Close}" CommandParameter="{Binding ElementName=currentWindow}"/>
         </StackPanel>
     </Grid>

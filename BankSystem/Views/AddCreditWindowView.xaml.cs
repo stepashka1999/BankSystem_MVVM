@@ -21,10 +21,10 @@ namespace BankSystem.Views
     /// </summary>
     public partial class AddCreditWindowView : Window
     {
-        public AddCreditWindowView(AClient holder, CreditModel credit)
+        public AddCreditWindowView(AClient holder)
         {
             InitializeComponent();
-            DataContext = new AddCreditViewModel(holder,this,credit);
+            DataContext = new AddCreditViewModel(holder);
         }
     }
 }

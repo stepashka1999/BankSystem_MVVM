@@ -1,50 +1,66 @@
 ﻿using BankSystem.Models;
 using BankSystem.Views;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media.Animation;
-
 
 namespace BankSystem.ViewModels
 {
+    /// <summary>
+    /// Клас ViewModel для контекста БД Банка
+    /// </summary>
     class BankViewModel
     {
-        private BankDbContext context; 
+        /// <summary>
+        /// Контекст БД
+        /// </summary>
+        private BankDbContext context;
 
-        public EmployeeViewModel EmployeeViewModel { get; set; }
+        /// <summary>
+        /// Имя подключения
+        /// </summary>
+        private string connectionName = "BankDB";
+
+
+        /// <summary>
+        /// ViewModel для работы департаментами
+        /// </summary>
         public DepartamentViewModel DepartamentViewModel { get; set; }
-        public LogViewModel LogViewModel { get; set; }
-        public AClientViewModel AClientViewModel { get; set; }
-        public EcoItemViewModel EcoItemViewModel { get; set; }
 
+        /// <summary>
+        /// ViewModel для работы с логами
+        /// </summary>
+        public LogViewModel LogViewModel { get; set; }
+
+        /// <summary>
+        /// ViewModel для работы с клиентами
+        /// </summary>
+        public AClientViewModel AClientViewModel { get; set; }
+
+
+        /// <summary>
+        /// Конструктор без параметров
+        /// </summary>
         public BankViewModel()
         {
-            string connectionName;
-            if (ConfigurationManager.ConnectionStrings["BankDB"] == null)
+
+            if (ConfigurationManager.ConnectionStrings[connectionName] == null)
             {
-                if (SetConnectionName() == false) return;
-            }
-
-            connectionName = ConfigurationManager.ConnectionStrings["BankDB"].Name;
+                if (WriteConntection() == false) return;
+            };
             
-            context = new BankDbContext(connectionName);
+            context = new BankDbContext();
 
-            AClientViewModel = new AClientViewModel(connectionName);
-            DepartamentViewModel = new DepartamentViewModel(connectionName);
-            LogViewModel = new LogViewModel(connectionName);
-            EmployeeViewModel = new EmployeeViewModel(connectionName);
-            EcoItemViewModel = new EcoItemViewModel(context);
+            AClientViewModel = new AClientViewModel();
+            DepartamentViewModel = new DepartamentViewModel();
+            LogViewModel = new LogViewModel();
         }
 
-        private bool SetConnectionName()
+
+        /// <summary>
+        /// Запись подключения в AppConfig
+        /// </summary>
+        /// <returns></returns>
+        private bool WriteConntection()
         {
             var window = new FirstLoadView();
             if(window.ShowDialog() == false)

@@ -21,10 +21,10 @@ namespace BankSystem.Views
     /// </summary>
     public partial class EditEmployeeWindowView : Window
     {
-        public EditEmployeeWindowView(BankDbContext context, EmployeeModel empl)
+        public EditEmployeeWindowView(EmployeeModel empl)
         {
             InitializeComponent();
-            DataContext = new EditEmployeeViewModel(context, empl, this);
+            DataContext = new EditEmployeeViewModel(empl);
         }
     }
 }

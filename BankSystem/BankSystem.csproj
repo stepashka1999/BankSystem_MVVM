@@ -50,6 +50,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Expression.Blend.Sdk.1.0.2\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -91,14 +94,12 @@
     <Compile Include="ViewModels\AddEmployeeViewModel.cs" />
     <Compile Include="ViewModels\AddVM\AddClientViewModel.cs" />
     <Compile Include="ViewModels\AddVM\AddOrgViewModel.cs" />
-    <Compile Include="ViewModels\ClientViewModel.cs" />
     <Compile Include="ViewModels\DepartamentViewModel.cs" />
-    <Compile Include="ViewModels\EcoItemViewModel.cs" />
+    <Compile Include="ViewModels\EditClientViewModel.cs" />
     <Compile Include="ViewModels\EditEmployeeViewModel.cs" />
-    <Compile Include="ViewModels\EmployeeViewModel.cs" />
+    <Compile Include="ViewModels\EditOrganisationViewModel.cs" />
     <Compile Include="ViewModels\FirstConnectionViewModel.cs" />
     <Compile Include="ViewModels\LogViewModel.cs" />
-    <Compile Include="ViewModels\OrganisationsViewModel.cs" />
     <Compile Include="ViewModels\TransactViewModel.cs" />
     <Compile Include="Views\AddCreditWindowView.xaml.cs">
       <DependentUpon>AddCreditWindowView.xaml</DependentUpon>
@@ -109,8 +110,14 @@
     <Compile Include="Views\AddEmployeeWindowView.xaml.cs">
       <DependentUpon>AddEmployeeWindowView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\EditClientView.xaml.cs">
+      <DependentUpon>EditClientView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\EditEmployeeWindowView.xaml.cs">
       <DependentUpon>EditEmployeeWindowView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EditOrganisationView.xaml.cs">
+      <DependentUpon>EditOrganisationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FirstLoadView.xaml.cs">
       <DependentUpon>FirstLoadView.xaml</DependentUpon>
@@ -138,9 +145,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\EditClientView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\EditEmployeeWindowView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\EditOrganisationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FirstLoadView.xaml">
       <SubType>Designer</SubType>

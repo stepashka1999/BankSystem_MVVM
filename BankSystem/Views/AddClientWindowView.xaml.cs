@@ -21,18 +21,9 @@ namespace BankSystem.Views
     /// </summary>
     public partial class AddClientWindowView : Window
     {
-        public ClientModel Client { get; set; } = new ClientModel();
-        public AddClientWindowView(BankDbContext context)
+        public AddClientWindowView()
         {
             InitializeComponent();
-            DataContext = new AddClientViewModel(context, this);
-        }
-
-        public AddClientWindowView(BankDbContext context, ClientModel client)
-        {
-            InitializeComponent();
-            Client = client;
-            DataContext = new AddClientViewModel(context, this);
         }
     }
 }

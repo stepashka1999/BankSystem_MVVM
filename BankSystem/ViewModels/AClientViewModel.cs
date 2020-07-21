@@ -1,42 +1,73 @@
 ﻿using BankSystem.Models;
 using BankSystem.Views;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace BankSystem.ViewModels
 {
+    /// <summary>
+    /// Класс ViewModel для AClient
+    /// </summary>
     class AClientViewModel : INotifyPropertyChanged
     {
+        /// <summary>
+        /// Событие изменения данных
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
 
+        /// <summary>
+        /// Контекст БД
+        /// </summary>
         private BankDbContext context;
 
 
+        //Выбранный объект AClient(ClientModel or OrganisationModel)
         private AClient selectedItem;
+        /// <summary>
+        /// Выбранный объект AClient(ClientModel or OrganisationModel)
+        /// </summary>
         public AClient SelectedItem { get => selectedItem; set { selectedItem = value; OnPropertyChanged(nameof(SelectedItem)); } }
 
 
+        // Выбранный объект AEcoItem(CreditModel or DepositModel)
         private AEcoItem selectedEcoItem;
+        /// <summary>
+        /// Выбранный объект AEcoItem(CreditModel or DepositModel)
+        /// </summary>
         public AEcoItem SelectedEcoItem { get => selectedEcoItem; set { selectedEcoItem = value; OnPropertyChanged(nameof(SelectedEcoItem)); } }
 
 
+        /// <summary>
+        /// Коллекция клиентов
+        /// </summary>
         public BindingList<ClientModel> Clients { get; set; }
+
+        /// <summary>
+        /// Коллекция организаций
+        /// </summary>
         public BindingList<OrganisationModel> Organisations { get; set; }
+
+        /// <summary>
+        /// Коллекция кредитов
+        /// </summary>
         public BindingList<CreditModel> Credits { get; set; }
+
+        /// <summary>
+        /// Коллекция депозитов
+        /// </summary>
         public BindingList<DepositModel> Deposits { get; set; }
 
-        public AClientViewModel(string connectionString)
+
+
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        public AClientViewModel()
         {
-            context = new BankDbContext(connectionString);
+            context = new BankDbContext();
 
             context.Clients.Load();
             context.Organisations.Load();
@@ -49,6 +80,15 @@ namespace BankSystem.ViewModels
             Deposits = context.Deposits.Local.ToBindingList();
         }
 
+
+        //----- Methods -----
+        #region Methods
+
+
+        /// <summary>
+        /// Удаление AClient (ClientModel or OrganisationModel)
+        /// </summary>
+        /// <param name="obj">Клиент</param>
         private void Remove(AClient obj)
         {
             if (obj is OrganisationModel)
@@ -62,7 +102,184 @@ namespace BankSystem.ViewModels
                 context.SaveChanges();
             }
         }
-        //Commands
+
+
+        /// <summary>
+        /// Добавление клиента
+        /// </summary>
+        private void AddClient()
+        {
+            var addClientWindow = new AddClientWindowView();
+
+            if (addClientWindow.ShowDialog() == true)
+            {
+                context.Clients.Load();
+            }
+        }
+
+        /// <summary>
+        /// Добавление организации 
+        /// </summary>
+        private void AddOrganisation()
+        {
+            var addOrgWindow = new AddOrganisationWindow();
+
+            if (addOrgWindow.ShowDialog() == true)
+            {
+                context.Organisations.Load();
+            }
+        }
+
+
+        /// <summary>
+        /// Редактирование AClient (ClientModel OrganisationModel)
+        /// </summary>
+        /// <param name="aClient">Клиент</param>
+        private void Edit(AClient aClient)
+        {
+            if (aClient is OrganisationModel)
+            {
+                EditOrganisation(aClient as OrganisationModel);
+            }
+            else if (aClient is ClientModel)
+            {
+                EditClient(aClient as ClientModel);
+            }
+        }
+
+        /// <summary>
+        /// Редактирование клиента
+        /// </summary>
+        /// <param name="client">Клиент</param>
+        private void EditClient(ClientModel client)
+        {
+            var editClientView = new EditClientView(client);
+            editClientView.ShowDialog();
+        }
+
+        /// <summary>
+        /// Редактирование организации
+        /// </summary>
+        /// <param name="organisation">Организация</param>
+        private void EditOrganisation(OrganisationModel organisation)
+        {
+            var editOrganisationView = new EditOrganisationView(organisation);
+            editOrganisationView.ShowDialog();
+        }
+
+
+        /// <summary>
+        /// Первеод средств
+        /// </summary>
+        /// <param name="aClient">Клинет</param>
+        private void Transact(AClient aClient)
+        {
+            var transactWindow = new TransactWindowView(selectedItem);
+            transactWindow.ShowDialog();
+        }
+
+
+        /// <summary>
+        /// Добавление кредита
+        /// </summary>
+        private void AddCredit()
+        {
+            var addCreditWindow = new AddCreditWindowView(SelectedItem);
+            if (addCreditWindow.ShowDialog() == true)
+            {
+                context.Clients.Load();
+                context.Organisations.Load();
+                context.Credits.Load();
+            }
+        }
+
+        /// <summary>
+        /// Добавление депозита
+        /// </summary>
+        private void AddDeposit()
+        {
+            var addDepositWindow = new AddDepositMindowView(SelectedItem);
+
+            if (addDepositWindow.ShowDialog() == true)
+            {
+                context.Clients.Load();
+                context.Organisations.Load();
+                context.Deposits.Load();
+            }
+        }
+
+
+        /// <summary>
+        /// Удаление AEcoItem (CreditModel or DepositMode)
+        /// </summary>
+        private void RemoveEcoItem()
+        {
+            if (SelectedEcoItem is CreditModel)
+            {
+                RemoveCredit();
+            }
+            else if (SelectedEcoItem is DepositModel)
+            {
+                RemoveDeposit();
+            }
+        }
+
+        /// <summary>
+        /// Ужадегте кредита
+        /// </summary>
+        private void RemoveCredit()
+        {
+            context.Credits.Remove(SelectedEcoItem as CreditModel);
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Удаление депозита
+        /// </summary>
+        private void RemoveDeposit()
+        {
+            context.Deposits.Remove(SelectedEcoItem as DepositModel);
+            context.SaveChanges();
+        }
+
+
+        /// <summary>
+        /// Вызывает событие изменения данных
+        /// </summary>
+        /// <param name="name">Имя измененных данных</param>
+        private void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+
+        /// <summary>
+        /// Симуляция ежемесячного платежа
+        /// </summary>
+        private void Simulate()
+        {
+            foreach (var client in Clients)
+            {
+                client.MakePayment();
+            }
+
+            foreach (var org in Organisations)
+            {
+                org.MakePayment();
+            }
+
+            context.SaveChanges();
+        }
+
+        #endregion
+
+        //----- Commands -----
+        #region Commands
+
+        
+        /// <summary>
+        /// Команда удаления AClient (ClientModel or OrganisationModel)
+        /// </summary>
         public ICommand RemoveCommand
         {
             get
@@ -75,66 +292,9 @@ namespace BankSystem.ViewModels
             }
         }
 
-        private void AddClient()
-        {
-            var addClientWindow = new AddClientWindowView(context);
-
-            if (addClientWindow.ShowDialog() == true)
-            {
-                var client = addClientWindow.Client;
-                context.Clients.Add(client);
-                context.SaveChanges();
-            }
-        }
-
-        public void AddOrganisation()
-        {
-            var addOrgWindow = new AddOrganisationWindow(context);
-
-            if (addOrgWindow.ShowDialog() == true)
-            {
-                var org = addOrgWindow.Organisation;
-                context.Organisations.Add(org);
-                context.SaveChanges();
-            }
-        }
-
-        public void Edit(AClient aClient)
-        {
-            if (aClient is OrganisationModel)
-            {
-                EditOrganisation(aClient as OrganisationModel);
-            }
-            else if (aClient is ClientModel)
-            {
-                EditClient(aClient as ClientModel);
-            }
-        }
-
-        private void EditClient(ClientModel client)
-        {
-            var addClientWindow = new AddClientWindowView(context, client);
-
-            if (addClientWindow.ShowDialog() == true)
-            {
-                //var editedClient = addClientWindow.Client;
-                context.Clients.AddOrUpdate(client);
-                context.SaveChanges();
-            }
-        }
-
-        private void EditOrganisation(OrganisationModel organisation)
-        {
-            var addOrgWindow = new AddOrganisationWindow(context, organisation);
-
-            if (addOrgWindow.ShowDialog() == true)
-            {
-                //var org = addOrgWindow.Organisation;
-                context.Organisations.AddOrUpdate(organisation);
-                context.SaveChanges();
-            }
-        }
-
+        /// <summary>
+        /// Команда добавления клиента
+        /// </summary>
         public ICommand AddClientCommand
         {
             get
@@ -146,6 +306,9 @@ namespace BankSystem.ViewModels
             }
         }
 
+        /// <summary>
+        /// Команда добавление организации
+        /// </summary>
         public ICommand AddOrganisationCommand
         {
             get
@@ -157,6 +320,9 @@ namespace BankSystem.ViewModels
             }
         }
 
+        /// <summary>
+        /// Команда редактирование AClient (ClientModel or OrganisationModel)
+        /// </summary>
         public ICommand EditCommand
         {
             get
@@ -168,6 +334,9 @@ namespace BankSystem.ViewModels
             }
         }
 
+        /// <summary>
+        /// Команда перевода средств
+        /// </summary>
         public ICommand TransactCommand
         {
             get
@@ -179,27 +348,9 @@ namespace BankSystem.ViewModels
             }
         }
 
-        private void Transact(AClient aClient)
-        {
-            var transactWindow = new TransactWindowView(context, selectedItem);
-            if (transactWindow.ShowDialog() == true)
-            {
-                context.SaveChanges();
-            }
-        }
-
-        private void AddCredit()
-        {
-            var credit = new CreditModel();
-            var addCreditWindow = new AddCreditWindowView(SelectedItem, credit);
-            if (addCreditWindow.ShowDialog() == true)
-            {
-                context.Credits.Add(credit);
-                context.SaveChanges();
-                SelectedItem = SelectedItem;
-            }
-        }
-
+        /// <summary>
+        /// Команда добавления кредита
+        /// </summary>
         public ICommand AddCreditCommand
         {
             get
@@ -211,18 +362,9 @@ namespace BankSystem.ViewModels
             }
         }
 
-        private void AddDeposit()
-        {
-            var deposit = new DepositModel();
-            var addDepositWindow = new AddDepositMindowView(SelectedItem, deposit);
-            if (addDepositWindow.ShowDialog() == true)
-            {
-                context.Deposits.Add(deposit);
-                context.SaveChanges();
-                SelectedItem = SelectedItem;
-            }
-        }
-
+        /// <summary>
+        /// Команда добавления депозита
+        /// </summary>
         public ICommand AddDepositCommand
         {
             get
@@ -234,30 +376,9 @@ namespace BankSystem.ViewModels
             }
         }
 
-        private void RemoveEcoItem()
-        {
-            if(SelectedEcoItem is CreditModel)
-            {
-                RemoveCredit();
-            }
-            else if(SelectedEcoItem is DepositModel)
-            {
-                RemoveDeposit();
-            }
-        }
-
-        private void RemoveCredit()
-        {
-            context.Credits.Remove(SelectedEcoItem as CreditModel);
-            context.SaveChanges();
-        }
-
-        private void RemoveDeposit()
-        {
-            context.Deposits.Remove(SelectedEcoItem as DepositModel);
-            context.SaveChanges();
-        }
-
+        /// <summary>
+        /// Команда удаления AEcoItem (CreditModel or DepositModel)
+        /// </summary>
         public ICommand RemoveAEcoItem
         {
             get
@@ -269,11 +390,9 @@ namespace BankSystem.ViewModels
             }
         }
 
-        private void OnPropertyChanged(string name)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
+        /// <summary>
+        /// Команда симуляции ежемесячного платежа
+        /// </summary>        
         public ICommand SimulateCommand
         {
             get
@@ -285,19 +404,6 @@ namespace BankSystem.ViewModels
             }
         }
 
-        private void Simulate()
-        {
-            foreach(var client in Clients)
-            {
-                client.MakePayment();
-            }
-
-            foreach(var org in Organisations)
-            {
-                org.MakePayment();
-            }
-
-            context.SaveChanges();
-        }
+        #endregion
     }
 }

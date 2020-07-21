@@ -1,4 +1,5 @@
-﻿<Window x:Class="BankSystem.Views.AddDepositMindowView"
+﻿<Window x:Name="currentWindow"
+        x:Class="BankSystem.Views.AddDepositMindowView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,20 +7,20 @@
         xmlns:local="clr-namespace:BankSystem.Views"
         mc:Ignorable="d"
         Title="AddDepositMindowView"
-        MinHeight="290" MinWidth="300"
-        Height="290" Width="300"
-        MaxHeight="290" MaxWidth="300">
+        MinHeight="330" MinWidth="300"
+        Height="330" Width="300">
 
     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Label Content="{Binding Error}" Foreground="OrangeRed" Margin="5"/>
             <Label Content="Amount" FontWeight="Bold" Margin="5"/>
             <Label FontWeight="SemiBold" Foreground="Gray" HorizontalContentAlignment="Center" FontSize="14" Margin="5,5,5,0" Content="{Binding ElementName=Amount_slider, Path=Value}"/>
             <Slider x:Name="Amount_slider" Minimum="0" Maximum="{Binding MaxAmount}" Margin="5" Value="{Binding CurrentAmount}" SmallChange="1" IsSnapToTickEnabled="True" LargeChange="1" TickFrequency="1"/>
             <Label Content="Month" FontWeight="Bold" Margin="5"/>
             <Label FontWeight="SemiBold" HorizontalContentAlignment="Center" Foreground="Gray" FontSize="14" Margin="5,5,5,0" Content="{Binding ElementName=Month_slider, Path=Value}"/>
             <Slider x:Name="Month_slider" Minimum="0" Maximum="96" Margin="5" SmallChange="1" IsSnapToTickEnabled="True" LargeChange="1" TickFrequency="1" Value="{Binding Month}"/>
-            <Button Content="Add" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5" Command="{Binding AddDepositCommand}"/>
-            <Button Content="Cancel" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5" Command="{Binding CancelCommand}"/>
+            <Button Content="Add" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5" Command="{Binding AddDepositCommand}" CommandParameter="{Binding ElementName=currentWindow}"/>
+            <Button Content="Cancel" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5" Command="{Binding CancelCommand}" CommandParameter="{Binding ElementName=currentWindow}"/>
         </StackPanel>
     </Grid>
 </Window>

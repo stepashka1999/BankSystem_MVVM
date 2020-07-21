@@ -1,41 +1,39 @@
-﻿<Window x:Class="BankSystem.Views.AddOrganisationWindow"
+﻿<Window x:Class="BankSystem.Views.EditClientView"
         x:Name="currentWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BankSystem.Views"
+        xmlns:vm="clr-namespace:BankSystem.ViewModels"
         xmlns:wpftk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        xmlns:vm ="clr-namespace:BankSystem.ViewModels"
+        xmlns:local="clr-namespace:BankSystem.Views"
         mc:Ignorable="d"
-        Title="AddOrganisationWindow"
-        Height="320" Width="300"
-        MinHeight="300" MinWidth="300">
-
-    <Window.DataContext>
-        <vm:AddOrgViewModel/>
-    </Window.DataContext>
+        Title="EditClientView" 
+        MinHeight="390" MinWidth="300"
+        Height="400" Width="300">
     
-
-    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid>
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseMove">
                 <i:InvokeCommandAction Command="{Binding VerifyCommand}"/>
             </i:EventTrigger>
         </i:Interaction.Triggers>
-        
+
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Label Content="{Binding Error}" Foreground="OrangeRed" Margin="5,0"/>
-            <Label Content="Name"/>
-            <TextBox x:Name="Name_tb" Text="{Binding NameOrg}" Margin="5,0"/>
+            <Label Content="{Binding Error}" Foreground="OrangeRed"/>
+            <Label Content="First Name"/>
+            <TextBox x:Name="FirstName_tb" Text="{Binding FirstName}" Margin="5,0"/>
+            <Label Content="SecondName"/>
+            <TextBox x:Name="SecondName_tb" Text="{Binding SecondName}" Margin="5,0"/>
+            <CheckBox Content="IsVip" Margin="5,10,5,5" IsChecked="{Binding IsVip}"/>
             <Label Content="Account"/>
-            <wpftk:MaskedTextBox x:Name="Account_tb" Mask="0000 0000 0000 0000" Margin="5,0" Text="{Binding Account}"/>
+            <wpftk:MaskedTextBox x:Name="Account_tb" Mask="0000 0000 0000 0000" Text="{Binding Account}" Margin="5,0"/>
             <Label Content="Amount"/>
             <TextBox x:Name="Amount_tb" Text="{Binding Amount}" Margin="5,0"/>
             <Label Content="CreditHistory"/>
-            <ComboBox ItemsSource="{Binding CreditHistories}" Margin="5,0" SelectedItem="{Binding SelectedItem}"/>
-            <Button Content="Add" Margin="5,10,5,5" Command="{Binding Add}" CommandParameter="{Binding ElementName=currentWindow}"/>
+            <ComboBox ItemsSource="{Binding CreditHistories}" SelectedItem="{Binding SelectedItem}" Margin="5,0"/>
+            <Button Content="Edit" Margin="5,10,5,5" Command="{Binding Add}" CommandParameter="{Binding ElementName=currentWindow}"/>
             <Button Content="Cancel" Margin="5,10,5,5" Command="{Binding Close}" CommandParameter="{Binding ElementName=currentWindow}"/>
         </StackPanel>
     </Grid>

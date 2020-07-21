@@ -1,13 +1,9 @@
 ﻿using BankSystem.Models;
-using BankSystem.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Entity;
-using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,30 +11,29 @@ using System.Windows.Input;
 
 namespace BankSystem.ViewModels
 {
-    /// <summary>
-    /// Класс ViewModel добавления организации
-    /// </summary>
-    class AddOrgViewModel: INotifyPropertyChanged
+    class EditClientViewModel:INotifyPropertyChanged
     {
+
         /// <summary>
         /// Событие изменения данных
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Состояние кнопки Add
-        /// </summary>
-        private bool IsActive { get; set; }     // Состояние кнопки Add
-
-        /// <summary>
-        /// Организация
-        /// </summary>
-        private OrganisationModel organisation; // Организация
+        public event PropertyChangedEventHandler PropertyChanged;   // Событие изменения данных
 
         /// <summary>
         /// Контекст БД
         /// </summary>
-        private BankDbContext context;          // Контекст БД
+        private BankDbContext context;  // Контекст БД
+
+        /// <summary>
+        /// Клиент
+        /// </summary>
+        private ClientModel client;     // Клиент
+
+
+        /// <summary>
+        /// Состояние кнопки Add
+        /// </summary>
+        private bool IsActive { get; set; }
 
 
         /// <summary>
@@ -46,15 +41,8 @@ namespace BankSystem.ViewModels
         /// </summary>
         public BindingList<CreditHistory> CreditHistories { get; set; }
 
-        //Кредитная история
-        private CreditHistory selectedItem;
-        /// <summary>
-        /// Кредитная история
-        /// </summary>
-        public CreditHistory SelectedItem { get => selectedItem; set { selectedItem = value; OnPropertyChanged(nameof(SelectedItem)); } }
 
-        
-        //Текст ошибки
+        // Текст ошибки
         private string error;
         /// <summary>
         /// Текст ошибки
@@ -62,23 +50,47 @@ namespace BankSystem.ViewModels
         public string Error { get => error; set { error = value; OnPropertyChanged(nameof(Error)); } }
 
 
-        //Название организации
-        private string nameOrg;
+        // Кредитная история
+        private CreditHistory selectedItem;
         /// <summary>
-        /// Название организации
+        /// Кредитная история
         /// </summary>
-        public string NameOrg { get => nameOrg; set { nameOrg = value; OnPropertyChanged(nameof(nameOrg)); } }
+        public CreditHistory SelectedItem { get => selectedItem; set { selectedItem = value; OnPropertyChanged(nameof(SelectedItem)); } }
 
 
-        //Номер аккаунта
+        // Имя
+        private string firstName;
+        /// <summary>
+        /// Имя
+        /// </summary>
+        public string FirstName { get => firstName; set { firstName = value; OnPropertyChanged(nameof(FirstName)); } }
+
+
+        // Фамилия
+        private string secondName;
+        /// <summary>
+        /// Фамилия
+        /// </summary>
+        public string SecondName { get => secondName; set { secondName = value; OnPropertyChanged(nameof(SecondName)); } }
+
+
+        // Статус клиента(VIP или нет)
+        private bool isVip;
+        /// <summary>
+        /// Статус клиента(VIP или нет)
+        /// </summary>
+        public bool IsVip { get => isVip; set { isVip = value; OnPropertyChanged(nameof(IsVip)); } }
+
+
+        // Номер счета
         private string account;
         /// <summary>
-        /// Номер аккаунта
+        /// Номер счета
         /// </summary>
         public string Account { get => account; set { account = value; OnPropertyChanged(nameof(Account)); } }
 
 
-        //Сумма счета
+        // Сумма счета
         private string amount;
         /// <summary>
         /// Сумма счета
@@ -87,28 +99,42 @@ namespace BankSystem.ViewModels
 
 
 
+
         /// <summary>
-        /// Конструктор
+        /// Конструктор ViewModel добавления клиента
         /// </summary>
-        public AddOrgViewModel()
+        public EditClientViewModel(ClientModel client)
         {
-            organisation = new OrganisationModel();
+            this.client = client;
             context = new BankDbContext();
 
             context.CreditHistories.Load();
             CreditHistories = context.CreditHistories.Local.ToBindingList();
+
+            FillFields();
         }
-
-
 
         //----- Methods -----
         #region Methods
 
+        /// <summary>
+        /// Заполнение полей даныыми клиента
+        /// </summary>
+        private void FillFields()
+        {
+            FirstName = client.FirstName;
+            SecondName = client.SecondName;
+            IsVip = client.IsVip;
+            Account = client.Account.ToString();
+            Amount = client.Amount.ToString();
+            SelectedItem = client.CreditHistory;
+        }
+
 
         /// <summary>
-        /// Верификация суммы аккаунта
+        /// Верификация суммы счета
         /// </summary>
-        /// <returns>Результат верификации</returns>
+        /// <returns>Рузальтат верификации</returns>
         private bool VerifyAmount()
         {
             var strAmount = Amount;
@@ -124,9 +150,9 @@ namespace BankSystem.ViewModels
         }
 
         /// <summary>
-        /// Верификация номера аккаунта
+        /// Верификация номера счета
         /// </summary>
-        /// <returns>Результат верификации</returns>
+        /// <returns>Реузльтат верификации</returns>
         private bool VerifyAccount()
         {
             if (string.IsNullOrEmpty(Account)) return false;
@@ -144,24 +170,39 @@ namespace BankSystem.ViewModels
         /// <summary>
         /// Общая верификация
         /// </summary>
-        private void VerifyData()
+        private void Verify()
         {
-            if (string.IsNullOrEmpty(NameOrg)) throw new Exception("Имя заполенено неверно");
-            if (VerifyAccount() == false) throw new Exception("Номер аккаунта заполнен неверно");
-            if (VerifyAmount() == false) throw new Exception("Сумма аккаунта заполнена неверно");
-            if (SelectedItem == null) throw new Exception("Не выбрана кредитная история");
-
+            if (string.IsNullOrEmpty(FirstName))
+            {
+                throw new Exception("Имя заполнено неверно");
+            }
+            if (string.IsNullOrEmpty(SecondName))
+            {
+                throw new Exception("Фамилия заполнено неверно");
+            }
+            if (VerifyAccount() == false)
+            {
+                throw new Exception("Аккаун заполнен неверно");
+            }
+            if (VerifyAmount() == false)
+            {
+                throw new Exception("Сумма заполнено неверно");
+            }
+            if (SelectedItem == null)
+            {
+                throw new Exception("Кредитная история не выбрана");
+            }
         }
 
         /// <summary>
-        /// Общая верификация с обработкой ошибок
+        /// Верификация данных
         /// </summary>
-        /// <returns>Результат верификации</returns>
-        private bool Verify()
+        /// <returns>рузальтат верификации</returns>
+        private bool VerifyData()
         {
             try
             {
-                VerifyData();
+                Verify();
             }
             catch (Exception e)
             {
@@ -169,9 +210,9 @@ namespace BankSystem.ViewModels
                 return false;
             }
 
+
             return true;
         }
-
 
 
         /// <summary>
@@ -179,7 +220,7 @@ namespace BankSystem.ViewModels
         /// </summary>
         /// <param name="text">Номер аккаунта в string</param>
         /// <param name="account">Переменная для хранения результата парсинга в long</param>
-        /// <returns>Результат успешности парсинга</returns>
+        /// <returns>Успешность парсинга</returns>
         private bool AccountParse(string text, out long account)
         {
             var res = text.Replace(" ", "");
@@ -200,31 +241,31 @@ namespace BankSystem.ViewModels
 
 
         /// <summary>
-        /// Заполнение полей организации
+        /// Заполнение полей клиента
         /// </summary>
-        private void FillOrg()
+        private void FillClient()
         {
-            organisation.Name = NameOrg;
-            organisation.Account = AccountParse(Account);
-            organisation.Amount = decimal.Parse(Amount);
-            organisation.CreditHistory = SelectedItem;
+            client.FirstName = FirstName;
+            client.SecondName = SecondName;
+            client.IsVip = IsVip;
+            client.Account = AccountParse(Account);
+            client.Amount = decimal.Parse(Amount);
+            client.CreditHistory = SelectedItem;
         }
-        
-        /// <summary>
-        ///Добавление организации в БД 
-        /// </summary>
-        private void AddOrg()
-        {
-            FillOrg();
 
-            context.Organisations.Add(organisation);
+        /// <summary>
+        /// Добавление клиента в БД
+        /// </summary>
+        private void EditClient()
+        {
+            FillClient();
             context.SaveChanges();
             context.Dispose();
         }
 
 
         /// <summary>
-        /// Вызывает событие изменения данных
+        /// Вызов события изменения данных
         /// </summary>
         /// <param name="name">Имя измененных данных</param>
         private void OnPropertyChanged(string name)
@@ -238,9 +279,8 @@ namespace BankSystem.ViewModels
         //----- Commands -----
         #region Commands
 
-
         /// <summary>
-        /// Команда добавления новой организации 
+        /// Команда добавления нового клиента
         /// </summary>
         public ICommand Add
         {
@@ -250,7 +290,7 @@ namespace BankSystem.ViewModels
                 {
                     if (IsActive)
                     {
-                        AddOrg();
+                        EditClient();
 
                         (obj as Window).DialogResult = true;
                         (obj as Window).Close();
@@ -261,7 +301,7 @@ namespace BankSystem.ViewModels
 
 
         /// <summary>
-        /// Команда отмены добавления новой организации
+        /// Команда отмены добавления нового клиента
         /// </summary>
         public ICommand Close
         {
@@ -275,7 +315,6 @@ namespace BankSystem.ViewModels
             }
         }
 
-
         /// <summary>
         /// Команда верификации данных
         /// </summary>
@@ -285,12 +324,11 @@ namespace BankSystem.ViewModels
             {
                 return new DelegateCommand(obj =>
                 {
-                    IsActive = Verify();
+                    IsActive = VerifyData();
                 });
             }
         }
 
         #endregion
-
     }
 }

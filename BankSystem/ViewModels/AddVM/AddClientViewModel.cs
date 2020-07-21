@@ -7,74 +7,120 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace BankSystem.ViewModels
 {
+    /// <summary>
+    /// Класс ViewModel добавления клиента
+    /// </summary>
     class AddClientViewModel:INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        /// Событие изменения данных
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;   // Событие изменения данных
 
-        private bool IsActive => VerifyData();
+        /// <summary>
+        /// Контекст БД
+        /// </summary>
+        private BankDbContext context;  // Контекст БД
 
-        AddClientWindowView window;
+        /// <summary>
+        /// Клиент
+        /// </summary>
+        private ClientModel client;     // Клиент
+
+
+        /// <summary>
+        /// Состояние кнопки Add
+        /// </summary>
+        private bool IsActive { get; set; }
+
+
+        /// <summary>
+        /// Коллекция вариантов кредитной истории
+        /// </summary>
         public BindingList<CreditHistory> CreditHistories { get; set; }
-        public ClientModel Client { get; set; }
 
 
+        // Текст ошибки
+        private string error;
+        /// <summary>
+        /// Текст ошибки
+        /// </summary>
+        public string Error { get => error; set { error = value; OnPropertyChanged(nameof(Error)); } }
+
+
+        // Кредитная история
         private CreditHistory selectedItem;
+        /// <summary>
+        /// Кредитная история
+        /// </summary>
         public CreditHistory SelectedItem { get => selectedItem; set { selectedItem = value; OnPropertyChanged(nameof(SelectedItem)); } }
 
 
+        // Имя
         private string firstName;
+        /// <summary>
+        /// Имя
+        /// </summary>
         public string FirstName { get => firstName; set { firstName = value; OnPropertyChanged(nameof(FirstName)); } }
 
 
+        // Фамилия
         private string secondName;
+        /// <summary>
+        /// Фамилия
+        /// </summary>
         public string SecondName { get => secondName; set { secondName = value; OnPropertyChanged(nameof(SecondName)); } }
 
 
+        // Статус клиента(VIP или нет)
         private bool isVip;
+        /// <summary>
+        /// Статус клиента(VIP или нет)
+        /// </summary>
         public bool IsVip { get => isVip; set { isVip = value; OnPropertyChanged(nameof(IsVip)); } }
 
 
+        // Номер счета
         private string account;
+        /// <summary>
+        /// Номер счета
+        /// </summary>
         public string Account { get => account; set { account = value; OnPropertyChanged(nameof(Account)); } }
 
 
+        // Сумма счета
         private string amount;
+        /// <summary>
+        /// Сумма счета
+        /// </summary>
         public string Amount { get => amount; set { amount = value; OnPropertyChanged(nameof(Amount)); } }
 
-        public AddClientViewModel() { } //Temp shit
 
-        public AddClientViewModel(BankDbContext context, AddClientWindowView window)
+        /// <summary>
+        /// Конструктор ViewModel добавления клиента
+        /// </summary>
+        public AddClientViewModel()
         {
-            this.window = window;
-            Client = window.Client;
-
-            if (IsFilled()) FillFields();
+            client = new ClientModel();
+            context = new BankDbContext();
 
             context.CreditHistories.Load();
             CreditHistories = context.CreditHistories.Local.ToBindingList();
         }
 
-        private void FillFields()
-        {
-            FirstName = Client.FirstName;
-            SecondName = Client.SecondName;
-            IsVip = Client.IsVip;
-            Account = Client.Account.ToString();
-            Amount = Client.Amount.ToString();
-            SelectedItem = Client.CreditHistory;
-        }
+        //----- Methods -----
+        #region Methods
 
-        private bool IsFilled()
-        {
-            if (string.IsNullOrEmpty(Client.FirstName)) return false;
 
-            return true;
-        }
-
+        /// <summary>
+        /// Верификация суммы счета
+        /// </summary>
+        /// <returns>Рузальтат верификации</returns>
         private bool VerifyAmount()
         {
             var strAmount = Amount;
@@ -89,6 +135,10 @@ namespace BankSystem.ViewModels
             return true;
         }
 
+        /// <summary>
+        /// Верификация номера счета
+        /// </summary>
+        /// <returns>Реузльтат верификации</returns>
         private bool VerifyAccount()
         {
             if (string.IsNullOrEmpty(Account)) return false;
@@ -102,22 +152,72 @@ namespace BankSystem.ViewModels
 
             return true;
         }
+
+        /// <summary>
+        /// Общая верификация
+        /// </summary>
+        private void Verify()
+        {
+            if (string.IsNullOrEmpty(FirstName))
+            {
+                throw new Exception("Имя заполнено неверно");
+            }
+            if (string.IsNullOrEmpty(SecondName))
+            {
+                throw new Exception("Фамилия заполнено неверно");
+            }
+            if (VerifyAccount() == false)
+            {
+                throw new Exception("Аккаун заполнен неверно");
+            }
+            if (VerifyAmount() == false)
+            {
+                throw new Exception("Сумма заполнено неверно");
+            }
+            if (SelectedItem == null)
+            {
+                throw new Exception("Кредитная история не выбрана");
+            }
+        }
+
+        /// <summary>
+        /// Верификация данных
+        /// </summary>
+        /// <returns>рузальтат верификации</returns>
         private bool VerifyData()
         {
-            if (string.IsNullOrEmpty(FirstName)) return false;
-            if (string.IsNullOrEmpty(SecondName)) return false;
-            if (VerifyAccount() == false) return false;
-            if (VerifyAmount() == false) return false;
-            if (SelectedItem == null) return false;
+            try
+            {
+                Verify();
+            }
+            catch(Exception e)
+            {
+                Error = e.Message;
+                return false;
+            }
+
+
             return true;
         }
 
+
+        /// <summary>
+        /// Парсинг номера аккаунта
+        /// </summary>
+        /// <param name="text">Номер аккаунта в string</param>
+        /// <param name="account">Переменная для хранения результата парсинга в long</param>
+        /// <returns>Успешность парсинга</returns>
         private bool AccountParse(string text, out long account)
         {
             var res = text.Replace(" ", "");
             return long.TryParse(res, out account);
         }
 
+        /// <summary>
+        /// Парсинг номера аккаунта
+        /// </summary>
+        /// <param name="text">Номер аккаунта в string</param>
+        /// <returns>Номер аккаунта в long</returns>
         private long AccountParse(string text)
         {
             var res = text.Replace(" ", "");
@@ -125,45 +225,97 @@ namespace BankSystem.ViewModels
             return long.Parse(res);
         }
 
+
+        /// <summary>
+        /// Заполнение полей клиента
+        /// </summary>
         private void FillClient()
         {
-            Client.FirstName = FirstName;
-            Client.SecondName = SecondName;
-            Client.IsVip = IsVip;
-            Client.Account = AccountParse(Account);
-            Client.Amount = decimal.Parse(Amount);
-            Client.CreditHistory = SelectedItem;
+            client.FirstName = FirstName;
+            client.SecondName = SecondName;
+            client.IsVip = IsVip;
+            client.Account = AccountParse(Account);
+            client.Amount = decimal.Parse(Amount);
+            client.CreditHistory = SelectedItem;
         }
 
+        /// <summary>
+        /// Добавление клиента в БД
+        /// </summary>
+        private void AddClient()
+        {
+            FillClient();
+            context.Clients.Add(client);
+            context.SaveChanges();
+            context.Dispose();
+        }
+
+
+        /// <summary>
+        /// Вызов события изменения данных
+        /// </summary>
+        /// <param name="name">Имя измененных данных</param>
+        private void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        #endregion
+
+
+        //----- Commands -----
+        #region Commands
+
+        /// <summary>
+        /// Команда добавления нового клиента
+        /// </summary>
         public ICommand Add
         {
             get
             {
                 return new DelegateCommand(obj =>
                 {
-                    FillClient();
+                    if (IsActive)
+                    {
+                        AddClient();
 
-                    window.DialogResult = true;
-                    window.Close();
-                }, obj => IsActive == true);
+                        (obj as Window).DialogResult = true;
+                        (obj as Window).Close();
+                    }
+                });
             }
         }
 
+
+        /// <summary>
+        /// Команда отмены добавления нового клиента
+        /// </summary>
         public ICommand Close
         {
             get
             {
                 return new DelegateCommand(obj =>
                 {
-                    window.DialogResult = false;
-                    window.Close();
+                    (obj as Window).DialogResult = false;
+                    (obj as Window).Close();
                 });
             }
         }
 
-        private void OnPropertyChanged(string name)
+        /// <summary>
+        /// Команда верификации данных
+        /// </summary>
+        public ICommand VerifyCommand
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            get
+            {
+                return new DelegateCommand(obj=>
+                {
+                    IsActive = VerifyData();
+                });
+            }
         }
+
+        #endregion
     }
 }

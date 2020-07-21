@@ -1,22 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media.Animation;
 
 namespace BankSystem.Models
 {
+    /// <summary>
+    /// Класс контекста БД Банка
+    /// </summary>
     public class BankDbContext : DbContext
     {
-        public BankDbContext(string connectionName) : base(connectionName)
+        /// <summary>
+        /// Имя подключения
+        /// </summary>
+        private static readonly string conName = "BankDB";      //Имя подключения
+
+
+        /// <summary>
+        /// Конструктор без параметров
+        /// </summary>
+        public BankDbContext():base(conName)
         {
             Departaments.Load();
 
-            if (Departaments == null || Departaments.Count() == 0)  BaseFill();
+            if (Departaments == null || Departaments.Count() == 0) BaseFill();
 
             Clients.Load();
             Credits.Load();
@@ -26,21 +31,61 @@ namespace BankSystem.Models
             CreditHistories.Load();
         }
 
+
+        /// <summary>
+        /// Коллекция кредитов
+        /// </summary>
         public DbSet<CreditModel> Credits { get; set; }
+
+        /// <summary>
+        /// Коллекция депозитов
+        /// </summary>
         public DbSet<DepositModel> Deposits { get; set; }
+
+        /// <summary>
+        /// Коллекция департаментов
+        /// </summary>
         public DbSet<DepartamentModel> Departaments { get; set; }
+
+        /// <summary>
+        /// Коллекция клиентов
+        /// </summary>
         public DbSet<ClientModel> Clients { get; set; }
+
+        /// <summary>
+        /// Коллекция организаций
+        /// </summary>
         public DbSet<OrganisationModel> Organisations { get; set; }
+
+        /// <summary>
+        /// Коллекция сотрудников
+        /// </summary>
         public DbSet<EmployeeModel> Employees { get; set; }
+
+        /// <summary>
+        /// Коллекция логов
+        /// </summary>
         public DbSet<LogModel> Logs { get; set; }
+
+        /// <summary>
+        /// Коллекция типов кредитной истории
+        /// </summary>
         public DbSet<CreditHistory> CreditHistories { get; set; }
 
+
+        /// <summary>
+        /// Заполнение БД базовыми значениями
+        /// </summary>
         private void BaseFill()
         {
             FillCreditHistory();
             FillDepartaments();
         }
 
+
+        /// <summary>
+        /// Заполение типао кредитной исотрии базовыми значениями
+        /// </summary>
         private void FillCreditHistory()
         {
             var goodHistory = new CreditHistory()
@@ -68,40 +113,11 @@ namespace BankSystem.Models
 
             SaveChanges();
         }
-        private void FillClients()
-        {
-            var client1 = new ClientModel("Rick", "Prat", false, 1234567891234567, 500000, CreditHistories.First());
-            var client2 = new ClientModel("Morty", "Vizl", false, 1234567891234567, 500000, CreditHistories.First());
-            var client3 = new ClientModel("Vasya", "Jebs", false, 1234567891234567, 500000, CreditHistories.First());
-            
-            var client11 = new ClientModel("Katya", "Jobs", true, 1234567891234567, 500000, CreditHistories.First());
-            var client21 = new ClientModel("Mer", "Grean", true, 1234567891234567, 500000, CreditHistories.First());
-            var client31 = new ClientModel("Grick", "Lone", true, 1234567891234567, 500000, CreditHistories.First());
 
-            
-            Clients.Add(client1);
-            Clients.Add(client2);
-            Clients.Add(client3);
 
-            Clients.Add(client11);
-            Clients.Add(client21);
-            Clients.Add(client31);
-
-            SaveChanges();
-        }
-
-        private void FillOrganisations()
-        {
-            var org1 = new OrganisationModel("Valve", 2563145274589658, 500000000, CreditHistories.First());
-            var org2 = new OrganisationModel("Forward", 2563145274589678, 100000, CreditHistories.First(x => x.Id == 3));
-            var org3 = new OrganisationModel("Rubin", 8523698741255698, 50000000, CreditHistories.First(x => x.Id == 2));
-
-            Organisations.Add(org1);
-            Organisations.Add(org2);
-            Organisations.Add(org3);
-            SaveChanges();
-        }
-
+        /// <summary>
+        /// Заполнение Департаментов базовыми значениями
+        /// </summary>
         private void FillDepartaments()
         {
             var dep1 = new DepartamentModel("Default Departament");

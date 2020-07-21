@@ -1,38 +1,48 @@
-﻿using BankSystem.Views;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
 namespace BankSystem.ViewModels
 {
+    /// <summary>
+    /// Класс ViewModel для произведения первого подключения
+    /// </summary>
     class FirstConnectionViewModel: INotifyPropertyChanged
     {
+        /// <summary>
+        /// Событие изменения данных поля
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
-        FirstLoadView window;
+
+        //Имя SQL сервера
         private string serverName;
+        /// <summary>
+        /// Имя SQL сервера
+        /// </summary>
         public string ServerName { get => serverName; set { serverName = value; OnPropertyChanged(nameof(ServerName)); } }
         
         
+        /// <summary>
+        /// Конструктор без параметров
+        /// </summary>
         public FirstConnectionViewModel() { }
-        public FirstConnectionViewModel(FirstLoadView window)
-        {
-            this.window = window;
-        }
 
-
+        /// <summary>
+        /// Вызов события изменения данных поля
+        /// </summary>
+        /// <param name="name">Имя поля</param>
         private void OnPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
 
+        /// <summary>
+        /// Команда подключения
+        /// </summary>
         public ICommand ConnectCommand 
         {
             get
@@ -43,8 +53,6 @@ namespace BankSystem.ViewModels
                     {
                         try
                         {
-                            //ConfigurationManager.ConnectionStrings["BankDB"].ConnectionString = $"Data Source={ServerName};Initial Catalog=Bank_test_db;Integrated Security=True;Pooling=True";
-                            //ConfigurationManager.ConnectionStrings["BankDB"].ProviderName = "System.Data.SqlClient";
                             var conStr = new ConnectionStringSettings("BankDB", $"Data Source={ServerName};Initial Catalog=Bank_test_db;Integrated Security=True;Pooling=True", "System.Data.SqlClient");
 
                             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
@@ -52,8 +60,8 @@ namespace BankSystem.ViewModels
                             config.Save(ConfigurationSaveMode.Modified);
                             ConfigurationManager.RefreshSection("connectionStrings");
 
-                            window.DialogResult = true;
-                            window.Close();
+                            (obj as Window).DialogResult = true;
+                            (obj as Window).Close();
                         }
                         catch (Exception e)
                         {
@@ -64,14 +72,18 @@ namespace BankSystem.ViewModels
             }
         }
 
+
+        /// <summary>
+        /// Команда отмены подключения
+        /// </summary>
         public ICommand CancelCommand
         {
             get
             {
                 return new DelegateCommand(obj =>
                 {
-                    window.DialogResult = false;
-                    window.Close();
+                    (obj as Window).DialogResult = false;
+                    (obj as Window).Close();
                 });
             }
         }

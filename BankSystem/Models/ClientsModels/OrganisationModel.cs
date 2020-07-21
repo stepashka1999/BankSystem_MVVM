@@ -1,33 +1,62 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BankSystem.Models
 {
+    /// <summary>
+    /// Класс организации
+    /// </summary>
     public class OrganisationModel: AClient
     {
+        /// <summary>
+        /// Событие изменения данных
+        /// </summary>
         public event Action<OrganisationModel> DataChanged;
 
 
+        // Имя
         private string name;
+        /// <summary>
+        /// Имя
+        /// </summary>
         public string Name { get => name; set { name = value; OnPropertyChanged(nameof(Name)); OnPropertyChanged(nameof(Info)); } }
 
 
+        /// <summary>
+        /// Информация о организации
+        /// </summary>
+        public override string Info
+        {
+            get => $"Name: {Name}\n" +
+                   $"Account: {Account}\n" +
+                   $"Ammount: {Amount}";
+        }
+
+
+
+        /// <summary>
+        /// Конструктор без параметров
+        /// </summary>
         public OrganisationModel() { }
+
+        /// <summary>
+        /// Конструктор с параметрами
+        /// </summary>
+        /// <param name="Name">Имя</param>
+        /// <param name="Account">Номер счета</param>
+        /// <param name="Amount">Сумма счета</param>
+        /// <param name="creditHistory">Кредитная история</param>
         public OrganisationModel(string Name, long Account, decimal Amount, CreditHistory creditHistory)
             : base(Account, Amount, creditHistory)
         {
             this.Name = Name;
         }
 
-        public override string Info { get => $"Name: {Name}\n" +
-                                    $"Account: {Account}\n" +
-                                    $"Ammount: {Amount}\n" +
-                                    $"Credits: {(Credits == null ? 0 : Credits.Count)}\n" +
-                                    $"Deposits: {(Deposits == null ? 0 : Deposits.Count)}";
-        }
+
+
+        /// <summary>
+        /// Изменени данных организации
+        /// </summary>
+        /// <param name="name">Имя</param>
         public void Edit(string name)
         {
             Name = name;

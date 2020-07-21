@@ -1,13 +1,9 @@
 ﻿using BankSystem.Models;
-using BankSystem.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Entity;
-using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,10 +11,7 @@ using System.Windows.Input;
 
 namespace BankSystem.ViewModels
 {
-    /// <summary>
-    /// Класс ViewModel добавления организации
-    /// </summary>
-    class AddOrgViewModel: INotifyPropertyChanged
+    class EditOrganisationViewModel:INotifyPropertyChanged
     {
         /// <summary>
         /// Событие изменения данных
@@ -90,19 +83,29 @@ namespace BankSystem.ViewModels
         /// <summary>
         /// Конструктор
         /// </summary>
-        public AddOrgViewModel()
+        public EditOrganisationViewModel(OrganisationModel organisation)
         {
-            organisation = new OrganisationModel();
+            this.organisation = organisation;
             context = new BankDbContext();
 
             context.CreditHistories.Load();
             CreditHistories = context.CreditHistories.Local.ToBindingList();
+
+            FillFields();
         }
 
 
 
         //----- Methods -----
         #region Methods
+
+        private void FillFields()
+        {
+            NameOrg = organisation.Name;
+            Account = organisation.Account.ToString();
+            Amount = organisation.Amount.ToString();
+            SelectedItem = organisation.CreditHistory;
+        }
 
 
         /// <summary>
@@ -213,11 +216,10 @@ namespace BankSystem.ViewModels
         /// <summary>
         ///Добавление организации в БД 
         /// </summary>
-        private void AddOrg()
+        private void EditOrganisation()
         {
             FillOrg();
 
-            context.Organisations.Add(organisation);
             context.SaveChanges();
             context.Dispose();
         }
@@ -250,7 +252,7 @@ namespace BankSystem.ViewModels
                 {
                     if (IsActive)
                     {
-                        AddOrg();
+                        EditOrganisation();
 
                         (obj as Window).DialogResult = true;
                         (obj as Window).Close();
