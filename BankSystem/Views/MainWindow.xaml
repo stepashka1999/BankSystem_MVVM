@@ -11,38 +11,7 @@
         Height="550" Width="800">
 
 
-    <Window.Resources>
-        <!-- Чет не получается изменение стиля при наведении и нажатии сделать((( -->
-        <Style x:Key="ModernButtons" TargetType="Button">
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Background" Value="CornflowerBlue"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border CornerRadius="12"  Background="CornflowerBlue" TextBlock.Foreground="White" Height="25" >
-                            <ContentPresenter RecognizesAccessKey="True" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        </Border>
-
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsDefaulted" Value="True">
-                                <Setter Property="Background" Value="Red"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="LightBlue"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="White"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Background" Value="Gray"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
+    
 
 
     <Grid Background="White">
@@ -76,13 +45,13 @@
                     <ListBox x:Name="Organisations_lb" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding Organisations }" SelectedItem="{Binding SelectedItem}"/>
                 </TabItem>
             </TabControl>
-            <Button Content="Add Client" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="10,5" Command="{Binding AddClientCommand}"/>
-            <Button Content="Add Organisation" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="10,5" Command="{Binding AddOrganisationCommand}"/>
-            <Button Content="Delete" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="10,5" Command="{Binding RemoveCommand}"/>
+            <Button Content="Add Client" HorizontalAlignment="Stretch" Height="22"  VerticalAlignment="Top" Margin="10,5" Command="{Binding AddClientCommand}"/>
+            <Button Content="Add Organisation" Height="22" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="10,5" Command="{Binding AddOrganisationCommand}"/>
+            <Button Content="Delete" Height="22" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="10,5" Command="{Binding RemoveCommand}"/>
             <Rectangle Fill="SkyBlue" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="5" Margin="10,5" RadiusX="2" RadiusY="2"/>
-            <Button Content="Edit" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="10,5" Command="{Binding EditCommand}"/>
+            <Button Content="Edit" Height="22" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="10,5" Command="{Binding EditCommand}"/>
             <Rectangle Fill="LightGreen" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="5" Margin="10,5" RadiusX="2" RadiusY="2"/>
-            <Button Content="Transact" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="10,5" Command="{Binding TransactCommand}"/>
+            <Button Content="Transact" Height="22" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="10,5" Command="{Binding TransactCommand}"/>
         </StackPanel>
 
         <!-- Info/Credits/Deposits -->
@@ -101,10 +70,10 @@
                     <!-- Deposits List -->
                 </TabItem>
             </TabControl>
-            <Button Content="Add Credit" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,5" Command="{Binding AClientViewModel.AddCreditCommand}"/>
-            <Button Content="Add Deposit" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,5" Command="{Binding AClientViewModel.AddDepositCommand}"/>
+            <Button Content="Add Credit" Height="22" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,5" Command="{Binding AClientViewModel.AddCreditCommand}"/>
+            <Button Content="Add Deposit" Height="22" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,5" Command="{Binding AClientViewModel.AddDepositCommand}"/>
             <Rectangle Fill="SkyBlue" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="5" Margin="10,5" RadiusX="2" RadiusY="2"/>
-            <Button Content="Delete" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,5" Command="{Binding AClientViewModel.RemoveAEcoItem}"/>
+            <Button Content="Delete" Height="22" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,5" Command="{Binding AClientViewModel.RemoveAEcoItem}"/>
         </StackPanel>
 
         <!-- Emplloyees -->
@@ -112,11 +81,11 @@
             <Label Content="Departament:"/>
             <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="10,0,10,0" ItemsSource="{Binding Departaments}" SelectedItem="{Binding SelectedDepatament}"/>
             <ListBox MaxHeight="200" ItemsSource="{Binding SelectedDepatament.Employees}" SelectedItem="{Binding SelectedEmployee}" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,5"/>
-            <Button Content="Add Employee" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,5" Command="{Binding AddEmployeeCommand}"/>
+            <Button Content="Add Employee" Height="22" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,5" Command="{Binding AddEmployeeCommand}"/>
             <Rectangle Fill="SkyBlue" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="5" Margin="10,5" RadiusX="2" RadiusY="2"/>
-            <Button Content="Edit Employee" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,5" Command="{Binding EditEmployeeCommand}"/>
+            <Button Content="Edit Employee" Height="22" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,5" Command="{Binding EditEmployeeCommand}"/>
             <Rectangle Fill="SkyBlue" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="5" Margin="10,5" RadiusX="2" RadiusY="2"/>
-            <Button Content="Delete Employee" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,5" Command="{Binding DeleteEmployeeCommand}"/>
+            <Button Content="Delete Employee" Height="22" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,5" Command="{Binding DeleteEmployeeCommand}"/>
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.ColumnSpan="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <TextBlock Text="Log" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Black" Foreground="Black"/>

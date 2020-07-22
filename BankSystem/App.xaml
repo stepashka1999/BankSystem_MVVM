@@ -4,6 +4,43 @@
              xmlns:local="clr-namespace:BankSystem"
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
-         
+
+        <SolidColorBrush x:Key="Default Brush" Color="CornflowerBlue"/>
+        <SolidColorBrush x:Key="Selected Brush" Color="#ADD2FF"/>
+        <SolidColorBrush x:Key="Pressed Brush" Color="#D0E5FF"/>
+        <SolidColorBrush x:Key="Inactive Brush" Color="Gray"/>
+
+        <!-- Чет не получается изменение стиля при наведении и нажатии сделать((( -->
+        <Style TargetType="Button">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Height" Value="22"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="brd" CornerRadius="12"
+                                Background="{StaticResource Default Brush}"
+                                Height="{TemplateBinding Height}"
+                                Width="{TemplateBinding Width}"  >
+                            <ContentPresenter RecognizesAccessKey="True" TextBlock.FontSize="{TemplateBinding FontSize}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Border.Background" TargetName="brd" Value="{StaticResource Selected Brush}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Border.Background" TargetName="brd" Value="{StaticResource Pressed Brush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Border.Background" TargetName="brd" Value="{StaticResource Inactive Brush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Application.Resources>
+    
 </Application>

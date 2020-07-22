@@ -15,9 +15,10 @@ namespace BankSystem.Models
 
 
         /// <summary>
-        /// Конструктор без параметров
+        /// Создает экземпляр класса BankDBContext
         /// </summary>
-        public BankDbContext():base(conName)
+        /// <param name="connection">Строка подключения</param>
+        public BankDbContext(string connection = null):base( connection==null? conName : connection)
         {
             Departaments.Load();
 

@@ -47,7 +47,16 @@ namespace BankSystem.ViewModels
             {
                 if (WriteConntection() == false) return;
             };
-            
+
+            Initial();
+        }
+
+
+        /// <summary>
+        /// Инициализация полей
+        /// </summary>
+        private void Initial()
+        {
             context = new BankDbContext();
 
             AClientViewModel = new AClientViewModel();

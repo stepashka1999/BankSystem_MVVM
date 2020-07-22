@@ -33,5 +33,8 @@ namespace BankSystem
         {
             this.execute(parameter);
         }
+
+        public delegate Task ExecutorAsync(object obj);
+
     }
 }
